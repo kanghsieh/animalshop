@@ -1,16 +1,19 @@
 const db = require('../db');
+const express = require('express');
+const router = express.Router();
 
-const getUsers = (req, res) => {
+module.exports = router;
+
+router.get('/', async (req, res) => {
   db.query('SELECT * FROM users ORDER BY id ASC', (error, results) => {
-    // console.log(process.env.DATABASE);
     if (error) {
       throw error;
     }
     res.status(200).json(results['rows']);
   })
-}
+})
 
-const getUsersById = (req, res) => {
+router.get('/:id', async (req, res) => {
   const id = parseInt(req.params.id, 10);
 
   db.query('SELECT * FROM users WHERE id = $1', [id], (error, results) => {
@@ -19,9 +22,9 @@ const getUsersById = (req, res) => {
     }
     res.status(200).json(results['rows']);
   })
-}
+})
 
-const createUser = (req, res) => {
+router.post('/', async (req, res) => {
   const { name, email } = req.body;
 
   db.query(
@@ -36,9 +39,9 @@ const createUser = (req, res) => {
         newUser: results['rows']
       });
     })
-}
+})
 
-const updateUser = (req, res) => {
+router.put('/:id', async (req, res) => {
   const { name, email } = req.body;
   const id = parseInt(req.params.id, 10);
 
@@ -50,13 +53,12 @@ const updateUser = (req, res) => {
       }
       res.status(200).json({
         message: `User id ${id} updated.}`,
-        updatedUser: results
       });
     }
   )
-}
+})
 
-const deleteUser = (req, res) => {
+router.delete('/:id', async (req, res) => {
   const id = parseInt(req.params.id, 10);
 
   db.query('DELETE FROM users WHERE id = $1',
@@ -67,12 +69,4 @@ const deleteUser = (req, res) => {
       }
       res.status(200).json({message: `User id ${id} deleted.`});
     })
-}
-
-module.exports = {
-  getUsers,
-  getUsersById,
-  createUser,
-  updateUser,
-  deleteUser,
-}
+})
