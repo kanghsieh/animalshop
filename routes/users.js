@@ -1,17 +1,7 @@
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
-}
-const Pool = require('pg').Pool;
-const pool = new Pool({
-  user: 'me',
-  host: 'localhost',
-  database: 'animalshop',
-  password: 'password',
-  port: 5432,
-})
+const db = require('../db');
 
 const getUsers = (req, res) => {
-  pool.query('SELECT * FROM users ORDER BY id ASC', (error, results) => {
+  db.query('SELECT * FROM users ORDER BY id ASC', (error, results) => {
     // console.log(process.env.DATABASE);
     if (error) {
       throw error;
@@ -23,7 +13,7 @@ const getUsers = (req, res) => {
 const getUsersById = (req, res) => {
   const id = parseInt(req.params.id, 10);
 
-  pool.query('SELECT * FROM users WHERE id = $1', [id], (error, results) => {
+  db.query('SELECT * FROM users WHERE id = $1', [id], (error, results) => {
     if (error) {
       throw error;
     }
@@ -34,7 +24,7 @@ const getUsersById = (req, res) => {
 const createUser = (req, res) => {
   const { name, email } = req.body;
 
-  pool.query(
+  db.query(
     'INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *',
     [name, email],
     (error, results) => {
@@ -52,7 +42,7 @@ const updateUser = (req, res) => {
   const { name, email } = req.body;
   const id = parseInt(req.params.id, 10);
 
-  pool.query('UPDATE users SET name = $1, email = $2 WHERE id = $3',
+  db.query('UPDATE users SET name = $1, email = $2 WHERE id = $3',
     [name, email, id],
     (error, results) => {
       if (error) {
@@ -69,7 +59,7 @@ const updateUser = (req, res) => {
 const deleteUser = (req, res) => {
   const id = parseInt(req.params.id, 10);
 
-  pool.query('DELETE FROM users WHERE id = $1',
+  db.query('DELETE FROM users WHERE id = $1',
     [id],
     (error, results) => {
       if (error) {
