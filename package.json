@@ -1,0 +1,14 @@
+{
+  "name": "animalshop",
+  "version": "1.0.0",
+  "description": "eCommerce Webapp using PERN stack",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "kanghsieh",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
